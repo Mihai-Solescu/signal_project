@@ -10,6 +10,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The FileOutputStrategy class writes alert data to a file.
+ */
 // former class name fileOutputStrategy violated UpperCamelCase naming 
 // convention
 public class FileOutputStrategy implements OutputStrategy {
@@ -23,10 +26,23 @@ public class FileOutputStrategy implements OutputStrategy {
   public final ConcurrentHashMap<String, String> fileMap
     = new ConcurrentHashMap<>();
 
+  /**
+   * Constructor for the FileOutputStrategy class.
+   * set the base directory for the file output
+   * @param baseDirectory The base directory for the file output.
+   */
   public FileOutputStrategy(String baseDirectory) {
     this.baseDirectory = baseDirectory;
   }
 
+  /**
+   * Append the alert data to a file.
+   *
+   * @param patientId The ID of the patient.
+   * @param timestamp The timestamp of the alert.
+   * @param label The label of the alert.
+   * @param data The data of the alert.
+   */
   @Override
   public void output(int patientId, long timestamp, String label, String data) {
     try {
