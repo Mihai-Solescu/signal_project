@@ -25,24 +25,25 @@ public class FileOutputStrategy implements OutputStrategy {
   public void output(int patientId, long timestamp, String label, String data) {
     try {
       // Create the directory
-      Files.createDirectories(Paths.get(baseDirectory));
+      Files.createDirectories(Paths.get(baseDirectory) );
     } catch (IOException e) {
-      System.err.println("Error creating base directory: " + e.getMessage());
+      System.err.println("Error creating base directory: " + e.getMessage() );
       return;
     }
     // Set the filePath variable
     // former non-constant variable name FilePath violated lowerCamelCase convention
     String filePath = fileMap.computeIfAbsent(
-        label, k -> Paths.get(baseDirectory, label + ".txt").toString());
+        label, k -> Paths.get(baseDirectory, label + ".txt").toString() );
 
     // Write the data to the file
     try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
-        Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.APPEND))) {
+        Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.APPEND) ) ) {
+
       out.printf("Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n", 
           patientId, timestamp, label, data);
 
     } catch (Exception e) {
-      System.err.println("Error writing to file " + filePath + ": " + e.getMessage());
+      System.err.println("Error writing to file " + filePath + ": " + e.getMessage() );
     }
   }
 }
