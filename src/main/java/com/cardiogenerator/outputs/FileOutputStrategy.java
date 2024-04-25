@@ -31,6 +31,7 @@ public class FileOutputStrategy implements OutputStrategy {
   public void output(int patientId, long timestamp, String label, String data) {
     try {
       // Create the directory
+      // added whitespace after closing parenthesis
       Files.createDirectories(Paths.get(baseDirectory) );
     } catch (IOException e) {
       System.err.println("Error creating base directory: " + e.getMessage() );
@@ -39,18 +40,21 @@ public class FileOutputStrategy implements OutputStrategy {
     // Set the filePath variable
     // former non-constant variable name FilePath violated
     // lowerCamelCase convention
+    // added whitespace after closing parenthesis
     String filePath = fileMap.computeIfAbsent(
         label, k -> Paths.get(baseDirectory, label + ".txt").toString() );
 
     // Write the data to the file
     try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(
         Paths.get(filePath), StandardOpenOption.CREATE,
+        // added whitespace after closing parenthesis
         StandardOpenOption.APPEND) ) ) {
 
       out.printf("Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n", 
           patientId, timestamp, label, data);
 
     } catch (Exception e) {
+      // added whitespace after closing parenthesis
       System.err.println(
           "Error writing to file " + filePath + ": " + e.getMessage() );
     }
