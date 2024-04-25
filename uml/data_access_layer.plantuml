@@ -1,0 +1,21 @@
+@startuml Data Access Layer Class Diagram
+
+rectangle "Data Access Layer" as DAL {
+    interface "DataListener" as DL {
+        + void onDataReceived(String data)
+    }
+
+    DL <|.. FDL
+
+    class "FileDataListener" as FDL {
+        + void onDataReceived(String data)
+    }
+
+    class "DataParser" as DP {
+    }
+
+    class "DataSourceAdapter" as DSA {
+    }
+}   
+
+@enduml

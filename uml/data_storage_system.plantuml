@@ -1,0 +1,27 @@
+@startuml Data Storage System Class Diagram
+
+rectangle "Data Storage System" as DSS {
+    class "DataStorage" as DS {
+        +storeData(data : PatientData)
+        +retrieveData(patientId : String) : PatientData
+        +storeData(patientId : String) 
+    }
+
+    class "DataRetriever" as DR {
+        +retrieveData(patientId : String) : PatientData
+    }
+
+    DS --> PD
+
+    class "PatientData" as PD {
+        +patientId : String
+        +metrics : String
+        +timestamp : DateTime
+    }
+
+    interface "IDataRetrieval" as IDR {
+        +retrieveData(patientId : String) : PatientData
+    }
+}
+
+@enduml
