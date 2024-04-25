@@ -1,0 +1,73 @@
+@startuml
+
+rectangle "Alert Generation System" as AGS {
+    class "AlertGenerator" as AG {
+        +evaluateData(data : PatientData)
+        +triggerAlert(alert : Alert)
+    }
+
+    AG --> A
+
+    class "Alert" as A {
+        +parentId : String
+        +condition : String
+        +timestamp : DateTime
+    }
+}
+
+AGS --> DSS
+
+rectangle "Data Storage System" as DSS {
+    class "DataStorage" as DS {
+        +storeData(data : PatientData)
+        +retrieveData(patientId : String) : PatientData
+        +storeData(patientId : String) 
+    }
+
+    DS --> PD
+
+    class "PatientData" as PD {
+        +patientId : String
+        +metrics : String
+        +timestamp : DateTime
+    }
+
+    interface "DataRetrieval" as DR {
+        +retrieveData(patientId : String) : PatientData
+    }
+}
+
+AGS --> PIS : Fetch Patient Records (based on patientId)
+
+rectangle "Patient Identification System" as PIS {
+    class "PatientIdentifier" as PI {
+        +matchPatientId(patientId : String) : boolean
+        +getPatientRecord(patientId : String) : PatientRecord
+    }
+
+
+    class "PatientRecord" as PR {
+        +patientId : String
+        +name : String
+        +dateOfBirth : DateTime
+        +medicalHistory : String
+    }
+}
+
+PIS --> DSS : Update Patient Records
+
+class "FileDataListener" as FDL {
+    +listenForData()
+    +parseData(data : String) : PatientData
+}
+
+FDL --> DSS : Forward Data for persistence
+FDL --> DP : Parse Data
+
+class "DataParser" as DP {
+    ' from JSON to PatientData
+}
+
+
+
+@enduml
