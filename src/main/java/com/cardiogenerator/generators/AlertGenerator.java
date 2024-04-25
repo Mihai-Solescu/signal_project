@@ -3,10 +3,13 @@ package com.cardiogenerator.generators;
 import java.util.Random;
 import com.cardiogenerator.outputs.OutputStrategy;
 
+// linewrapped to 80 cause we needed a 100 but i like 80 more so wololo
+
 public class AlertGenerator implements PatientDataGenerator {
 
   public static final Random randomGenerator = new Random();
-  // former non-constant variable name AlertStates violated lowerCamelCase convention
+  // former non-constant variable name AlertStates violated lowerCamelCase
+  // convention
   private boolean[] alertStates; // false = resolved, true = pressed
 
   public AlertGenerator(int patientCount) {
@@ -20,23 +23,30 @@ public class AlertGenerator implements PatientDataGenerator {
         if (randomGenerator.nextDouble() < 0.9) { // 90% chance to resolve
           alertStates[patientId] = false;
           // Output the alert
-          outputStrategy.output(patientId, System.currentTimeMillis(),"Alert", "resolved");
+          outputStrategy.output(patientId, System.currentTimeMillis(), "Alert",
+              "resolved");
         }
       } else {
-          // former non-constant variable name Lambda violated lowerCamelCase convention
-          // Average rate (alerts per period), adjust based on desired frequency
-          double lambda = 0.1; 
-          double p = -Math.expm1(-lambda); // Probability of at least one alert in the period
-          boolean alertTriggered = randomGenerator.nextDouble() < p;
+        // former non-constant variable name
+        // Lambda violated lowerCamelCase convention
+        // Average rate (alerts per period), adjust based on desired frequency
+        double lambda = 0.1;
+        // Probability of at least one alert in the period
+        double p = -Math.expm1(-lambda);
+        boolean alertTriggered = randomGenerator.nextDouble() < p;
 
-          if (alertTriggered) {
-            alertStates[patientId] = true;
-            // Output the alert
-            outputStrategy.output(patientId, System.currentTimeMillis(), "Alert", "triggered");
-          }
+        if (alertTriggered) {
+          alertStates[patientId] = true;
+          // Output the alert
+          outputStrategy.output(
+              patientId, System.currentTimeMillis(), "Alert", "triggered");
+        }
       }
     } catch (Exception e) {
-      System.err.println("An error occurred while generating alert data for patient " + patientId);
+      System.err.println(
+          "An error occurred while generating alert data for patient "
+          + patientId);
+
       e.printStackTrace();
     }
   }
