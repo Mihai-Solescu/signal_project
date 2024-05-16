@@ -14,8 +14,97 @@ rectangle "Alert Generation System" as AGS {
         +timestamp : DateTime
     }
 
+    class "BloodPressureAlert" as BPA {
+
+    }
+
+    A <|-- BPA
+
+    class "BloodOxygenAlert" as BOA {
+
+    }
+
+    A <|-- BOA
+
+    class "ECGAlert" as ECGA {
+
+    }
+
+    A <|-- ECGA
+
+    class "AlertFactory" as AF {
+        +createAlert(data : PatientData)
+    }
+
+    AF --> A
+
+    class "BloodOxygenAlertFactory" as BOAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- BOAF
+
+    class "BloodPressureAlertFactory" as BPAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- BPAF
+
+    class "ECGAlertFactory" as ECGAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- ECGAF
+
     class "AlertManager" as AM {
         +sendAlert(alert : Alert)
+    }
+
+    AM --> AG
+
+    class "AlertStrategy" as AS {
+        +checkAlert()
+    }
+
+    class "BloodPressureStragegy" as BPS {
+
+    }
+
+    AS <|-- BPS
+
+    class "BloodOxygenStragegy" as BOS {
+
+    }
+
+    AS <|-- BOS
+
+    class "ECGStragegy" as ECGS {
+
+    }
+
+    AS <|-- ECGS
+
+    class "AlertDecorator" as AD {
+        -alert: Alert
+        +decorateAlert(alert : Alert)
+    }
+
+    A <|-- AD
+
+    class "RepeatedAlertDecorator" as RAD {
+        'Checks and re-checks alert conditions over a set interval.
+    }
+
+    AD <|-- RAD
+
+    class "PriorityAlertDecorator" as PAD {
+        'Adds prioritization tagging to alerts needing urgent attention.
+    }
+
+    AD <|-- PAD
+
+    class "AlertLogger" as AL {
+        +logAlert(alert : Alert)
     }
 }
 

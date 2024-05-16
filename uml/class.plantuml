@@ -1,5 +1,10 @@
 @startuml
 
+class "HealthDataGenerator" as HDG {
+    -this : HealthDataGenerator
+    +generateData() : PatientData
+}
+
 rectangle "Alert Generation System" as AGS {
     class "AlertGenerator" as AG {
         +evaluateData(data : PatientData)
