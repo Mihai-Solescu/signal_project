@@ -1,0 +1,170 @@
+@startuml
+
+class "HealthDataGenerator" as HDG {
+    -this : HealthDataGenerator
+    +generateData() : PatientData
+}
+
+rectangle "Alert Generation System" as AGS {
+    class "AlertGenerator" as AG {
+        +evaluateData(data : PatientData)
+        +triggerAlert(alert : Alert)
+    }
+
+    AG --> A
+
+    class "Alert" as A {
+        +parentId : String
+        +condition : String
+        +timestamp : DateTime
+    }
+
+    class "BloodPressureAlert" as BPA {
+
+    }
+
+    A <|-- BPA
+
+    class "BloodOxygenAlert" as BOA {
+
+    }
+
+    A <|-- BOA
+
+    class "ECGAlert" as ECGA {
+
+    }
+
+    A <|-- ECGA
+
+    class "AlertFactory" as AF {
+        +createAlert(data : PatientData)
+    }
+
+    AF --> A
+
+    class "BloodOxygenAlertFactory" as BOAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- BOAF
+
+    class "BloodPressureAlertFactory" as BPAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- BPAF
+
+    class "ECGAlertFactory" as ECGAF {
+        +createAlert(data : PatientData)
+    }
+
+    AF <|-- ECGAF
+
+    class "AlertManager" as AM {
+        +sendAlert(alert : Alert)
+    }
+
+    AM --> AG
+
+    class "AlertStrategy" as AS {
+        +checkAlert()
+    }
+
+    class "BloodPressureStragegy" as BPS {
+
+    }
+
+    AS <|-- BPS
+
+    class "BloodOxygenStragegy" as BOS {
+
+    }
+
+    AS <|-- BOS
+
+    class "ECGStragegy" as ECGS {
+
+    }
+
+    AS <|-- ECGS
+
+    class "AlertDecorator" as AD {
+        -alert: Alert
+        +decorateAlert(alert : Alert)
+    }
+
+    A <|-- AD
+
+    class "RepeatedAlertDecorator" as RAD {
+        'Checks and re-checks alert conditions over a set interval.
+    }
+
+    AD <|-- RAD
+
+    class "PriorityAlertDecorator" as PAD {
+        'Adds prioritization tagging to alerts needing urgent attention.
+    }
+
+    AD <|-- PAD
+
+    class "AlertLogger" as AL {
+        +logAlert(alert : Alert)
+    }
+}
+
+AGS --> DM
+
+rectangle "data_management" as DM {
+
+    interface "DataReader" as DL {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    DS <-- DL
+
+    class "FileDataReader" as FDL {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    class "WebSocketDataReader" as WSDR {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    class "TCPDataReader" as TDR {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    DL <|.. FDL
+    DL <|.. WSDR
+    DL <|.. TDR
+
+    class "DataStorage" as DS {
+        - patientMap : Map<Integer, Patient>
+        + addPatientData(patientId : int, measurementValue : double, recordType : String, timestamp : long) : void
+        + getRecord(patientId : int, startTime : long, endTime : long) : List<PatientRecord>
+        + getAllPatients() : List<Patient>
+    }
+
+    class "Patient" as P {
+        - patientId : int
+        - patientRecords : List<PatientRecord>
+        + addRecord(measurementValue : double, recordType : String, timestamp : long) : void
+        + getRecords(startTime : long, endTime : long) : List<PatientRecord>
+    }
+
+    class "PatientRecord" as PR {
+        - patientId : int
+        - recordType : String
+        - measurementValue : double
+        - timestamp : long
+        '+getters
+    }
+
+    DS --> P
+    P -- "0..*" PR
+    DS --> PR
+}
+
+
+@enduml
