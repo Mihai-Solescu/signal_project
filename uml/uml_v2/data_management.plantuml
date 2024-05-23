@@ -1,0 +1,55 @@
+@startuml Data Access Layer Class Diagram
+'data_management package
+
+rectangle "data_management" as DM {
+
+    interface "DataReader" as DL {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    DS <-- DL
+
+    class "FileDataReader" as FDL {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    class "WebSocketDataReader" as WSDR {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    class "TCPDataReader" as TDR {
+        + void readData(dataStorage : DataStorage)
+    }
+
+    DL <|.. FDL
+    DL <|.. WSDR
+    DL <|.. TDR
+
+    class "DataStorage" as DS {
+        - patientMap : Map<Integer, Patient>
+        + addPatientData(patientId : int, measurementValue : double, recordType : String, timestamp : long) : void
+        + getRecord(patientId : int, startTime : long, endTime : long) : List<PatientRecord>
+        + getAllPatients() : List<Patient>
+    }
+
+    class "Patient" as P {
+        - patientId : int
+        - patientRecords : List<PatientRecord>
+        + addRecord(measurementValue : double, recordType : String, timestamp : long) : void
+        + getRecords(startTime : long, endTime : long) : List<PatientRecord>
+    }
+
+    class "PatientRecord" as PR {
+        - patientId : int
+        - recordType : String
+        - measurementValue : double
+        - timestamp : long
+        '+getters
+    }
+
+    DS --> P
+    P -- "0..*" PR
+    DS --> PR
+}   
+
+@enduml

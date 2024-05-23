@@ -2,6 +2,7 @@
 
 rectangle "Alert Generation System" as AGS {
     class "AlertGenerator" as AG {
+        -dataStorage : DataStorage
         +evaluateData(data : PatientData)
         +triggerAlert(alert : Alert)
     }
