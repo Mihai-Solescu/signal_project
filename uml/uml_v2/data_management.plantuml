@@ -1,4 +1,4 @@
-@startuml Data Access Layer Class Diagram
+@startuml Data Management Class Diagram
 'data_management package
 
 rectangle "data_management" as DM {
