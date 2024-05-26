@@ -1,8 +1,9 @@
 package com.data_management;
 
+import com.observer.IObserver;
 import java.io.IOException;
 
-public interface DataReader {
+public interface DataReader extends IObserver {
     /**
      * Reads data from a specified source and stores it in the data storage.
      * 
