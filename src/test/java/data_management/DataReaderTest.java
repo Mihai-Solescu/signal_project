@@ -30,7 +30,7 @@ public class DataReaderTest {
   final String label = "test";
   DataReader[] readers = new DataReader[3];
   DataStorage[] dataStorage = new DataStorage[readers.length];
-  DataStorage reference = new DataStorage();
+  DataStorage reference = DataStorage.getInstance();
   OutputStrategy[] outputs = new OutputStrategy[readers.length];
   Random random = new Random();
   double[][] data = new double[patientCount][DataPointCount];
@@ -40,7 +40,7 @@ public class DataReaderTest {
   @Test
   public void testReadData() throws Exception {
     for (int i = 0; i < dataStorage.length; i++) {
-      dataStorage[i] = new DataStorage();
+      dataStorage[i] = DataStorage.getInstance();
     }
     {
       File newFile = new File("output/test.txt");

@@ -13,7 +13,7 @@ import com.alerts.AlertGenerator;
  * patient IDs.
  */
 public class DataStorage {
-    private DataStorage dataStorage;
+    private static DataStorage dataStorage;
 
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
@@ -21,15 +21,14 @@ public class DataStorage {
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
      */
-    public DataStorage() {
+    private DataStorage() {
         this.patientMap = new HashMap<>();
-        this.dataStorage = this;
     }
 
-    public DataStorage getInstance() {
-        if (this.dataStorage == null)
-            this.dataStorage = new DataStorage();
-        return this.dataStorage;
+    public static DataStorage getInstance() {
+        if (dataStorage == null)
+            dataStorage = new DataStorage();
+        return dataStorage;
     }
 
     /**

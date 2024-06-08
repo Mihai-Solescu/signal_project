@@ -3,6 +3,8 @@ package com.alerts;
 import com.alerts.alert.Alert;
 import com.alerts.strategy.AlertStrategy;
 import com.alerts.strategy.BloodPressureStrategy;
+import com.alerts.strategy.ECGStrategy;
+import com.alerts.strategy.HypotensiveHypoxemiaStrategy;
 import com.alerts.strategy.OxygenSaturationStrategy;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
@@ -35,6 +37,8 @@ public class AlertGenerator {
         this.alertStrategies = new ArrayList<>();
         this.alertStrategies.add(new BloodPressureStrategy());
         this.alertStrategies.add(new OxygenSaturationStrategy());
+        this.alertStrategies.add(new HypotensiveHypoxemiaStrategy());
+        this.alertStrategies.add(new ECGStrategy());
     }
 
     public AlertGenerator(DataStorage dataStorage, AlertStrategy... alertStrategies) {
@@ -71,8 +75,8 @@ public class AlertGenerator {
      * @param alert the alert object containing details about the alert condition
      */
     private void triggerAlert(Alert alert) {
-        System.out.println("ALERT: " + alert.getPatientId() + " - " + alert.getCondition());
         // Implementation might involve logging the alert or notifying staff
+        System.out.println("ALERT: Patient " + alert.getPatientId() + " - " + alert.getCondition());
     }
 
     public void addAlertStrategy(AlertStrategy alertStrategy) {
