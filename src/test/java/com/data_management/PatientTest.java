@@ -15,7 +15,7 @@ class PatientTest {
     patient.addRecord(120, "SystolicPressure", 1000);
     patient.addRecord(130, "SystolicPressure", 2000);
     patient.addRecord(120, "SystolicPressure", 3000);
-    patient.addRecord(140, "SystolicPressure", 4000);
+    patient.addRecord(140, "SystolicPressure", 3001);
 
     List<PatientRecord> recs = patient.getRecords(2000, 3000);
     assertEquals(2, recs.size());

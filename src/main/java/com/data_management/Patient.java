@@ -81,7 +81,10 @@ public class Patient {
         current /= 2;
       } else if (right.getTimestamp() < startTime) {
         current += (patientRecords.size() - current) / 2;
-      } else {
+      } else if (right.getTimestamp() == startTime) {
+        current++;
+        break;
+      }else {
         break;
       }
     }
@@ -141,5 +144,27 @@ public class Patient {
 
   public int getPatientId() {
     return patientId;
+  }
+
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    if (obj.getClass() != this.getClass()) {
+      return false;
+    }
+    Patient other = (Patient) obj;
+    if (other.getPatientId() != this.getPatientId()) {
+      return false;
+    }
+    for (int i = 0; i < patientRecords.size(); i++) {
+      if (!patientRecords.get(i).equals(other.patientRecords.get(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -18,7 +18,7 @@ public class PatientRecord {
     /**
      * Constructs a new patient record with specified details.
      * 
-     * @param patientId        the unique identifier for the patient
+     * @param patientId          the unique identifier for the patient
      * @param measurementValue the numerical value of the recorded measurement
      * @param recordType       the type of measurement (e.g., "ECG", "Blood
      *                         Pressure")
@@ -66,5 +66,18 @@ public class PatientRecord {
      */
     public String getRecordType() {
         return recordType;
+    }
+
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        PatientRecord that = (PatientRecord) obj;
+        return patientId == that.patientId && Double.compare(that.measurementValue, measurementValue) == 0
+                && timestamp == that.timestamp && recordType.equals(that.recordType);
     }
 }
