@@ -52,11 +52,11 @@ public class DataReaderTest {
     outputs[2] = new WebSocketOutputStrategy(1235);
     readers[0] = new FileDataReader("output/"+label+".txt");
     readers[1] = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
-    readers[2] = new WebSocketDataReader(new URI("localhost:1235"));
+    readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
     System.out.println("TestReadData started");
     generate();
     try {
-      Thread.sleep(50);
+      Thread.sleep(100);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -69,23 +69,23 @@ public class DataReaderTest {
     for(int count = 0; count < 10; count++) {
       generate();
       try {
-        Thread.sleep(35);
+        Thread.sleep(15);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
       for (int i = 0; i < readers.length; i++) {
         readers[i].update();
       }
-      for (int i = 0; i < readers.length; i++) {
-        for(int j = 0; j < readers.length; j++) {
-          if(i == j) {
-            continue;
-          }
-          if(dataStorage[i].equals(dataStorage[j])) {
-            continue;
-          }
-          throw new Exception("Readers are not equal");
+    }
+    for (int i = 0; i < readers.length; i++) {
+      for(int j = 0; j < readers.length; j++) {
+        if(i == j) {
+          continue;
         }
+        if(dataStorage[i].equals(dataStorage[j])) {
+          continue;
+        }
+        throw new Exception("Readers are not equal");
       }
     }
     System.out.println("TestReadData finished");
