@@ -2,6 +2,7 @@ package com.data_management;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.CharBuffer;
 
 public interface DataReader{
     /**
@@ -13,34 +14,39 @@ public interface DataReader{
     void readData(DataStorage dataStorage) throws IOException;
     default void decodeData(
         Reader in, DataStorage dataStorage) throws IOException{
-    int length = in.read();
-    char[] buffer = new char[length];
-    in.read(buffer);
-    in.close();
-    String dataString = new String(buffer);
-    //parse string to data
-    String[] lines = dataString.split("\n");
-    for (String line : lines) {
-      String[] parts = line.split(",");
-      if (parts.length != 4) {
-        throw new IOException("Invalid data format");
+      int charVal;
+      String dataString = "";
+      while ((charVal = in.read()) != -1) {
+          dataString += (char) charVal;
       }
-      try {
-        int patientId = Integer.parseInt(parts[0].split(":")[1]);
-        long timestamp = Long.parseLong(parts[1].split(":")[1]);
-        String Label = parts[2].split(":")[1];
-        String DataFull = parts[3].split(":")[1];
-        double data = 0;
-        if(DataFull.contains("%")) {
-          data = Double.parseDouble(DataFull.substring(0, DataFull.length()-1));
-          data /= 100;
-        } else {
-          data = Double.parseDouble(DataFull);
+      in.close();
+      //parse string to data
+      String[] lines = dataString.split("\n");
+      for (String line : lines) {
+        String[] parts = line.split(",");
+        if (parts.length != 4) {
+          throw new IOException("Invalid data format to many properties");
         }
-        dataStorage.addPatientData(patientId, data, Label, timestamp);
-      } catch (NumberFormatException e) {
-        throw new IOException("Invalid data format");
+        try {
+          int patientId = Integer.parseInt(
+              parts[0].split(":")[1].trim());
+          long timestamp = Long.parseLong(
+              parts[1].split(":")[1].trim());
+          String Label = 
+            parts[2].split(":")[1].trim();
+          String DataFull = 
+            parts[3].split(":")[1].trim();
+          double data = 0;
+          if(DataFull.contains("%")) {
+            data = Double.parseDouble(DataFull.substring(0, DataFull.length()-1));
+            data /= 100;
+          } else {
+            data = Double.parseDouble(DataFull);
+          }
+          dataStorage.addPatientData(patientId, data, Label, timestamp);
+        } catch (NumberFormatException e) {
+          throw new IOException("Invalid data format no proper number conversion possible");
+        }
       }
-    }
   }
 }

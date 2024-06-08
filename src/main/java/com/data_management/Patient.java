@@ -62,9 +62,9 @@ public class Patient {
    */
   public List<PatientRecord> getRecords(long startTime, long endTime) {
     //binary search for timestamp start time
-    int current = patientRecords.size() / 2;
+    int current = (patientRecords.size() / 2)-1;
     while(true) {
-      if (current + 1 >= patientRecords.size()) {
+      if (current + 1 >= patientRecords.size() || current < 0) {
         return new ArrayList<>();
       }
       PatientRecord left = patientRecords.get(current);

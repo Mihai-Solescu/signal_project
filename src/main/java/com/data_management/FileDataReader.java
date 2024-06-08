@@ -11,7 +11,7 @@ public class FileDataReader implements DataReader, IObserver {
   private String File = null;
   private DataStorage dataStorage = null;
 
-  FileDataReader(String Filename) {
+  public FileDataReader(String Filename) {
     File = Filename;
   }
 
