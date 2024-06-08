@@ -25,6 +25,8 @@ import java.util.Random;
 public class DataReaderTest {
   final int patientCount = 5;
   final int DataPointCount = 10;
+  final int timestampCount = 2;
+  final int entriesPerTimestamp = DataPointCount / timestampCount;
   final String label = "test";
   DataReader[] readers = new DataReader[3];
   DataStorage[] dataStorage = new DataStorage[readers.length];
@@ -32,7 +34,7 @@ public class DataReaderTest {
   OutputStrategy[] outputs = new OutputStrategy[readers.length];
   Random random = new Random();
   double[][] data = new double[patientCount][DataPointCount];
-  long[][] timestamps = new long[patientCount][1+DataPointCount/5];
+  long[][] timestamps = new long[patientCount][1+timestampCount];
   long currentTime = System.currentTimeMillis();
   //test the same way for all readers
   @Test
@@ -50,11 +52,11 @@ public class DataReaderTest {
     outputs[2] = new WebSocketOutputStrategy(1235);
     readers[0] = new FileDataReader("output/"+label+".txt");
     readers[1] = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
-    readers[2] = new WebSocketDataReader(new URI("localhost:1235"));
+    readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
     System.out.println("TestReadData started");
     generate();
     try {
-      Thread.sleep(50);
+      Thread.sleep(100);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -67,23 +69,28 @@ public class DataReaderTest {
     for(int count = 0; count < 10; count++) {
       generate();
       try {
-        Thread.sleep(25);
+        Thread.sleep(15);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
       for (int i = 0; i < readers.length; i++) {
         readers[i].update();
       }
-      for (int i = 0; i < readers.length; i++) {
-        for(int j = 0; j < readers.length; j++) {
-          if(i == j) {
-            continue;
-          }
-          if(readers[i].equals(readers[j])) {
-            continue;
-          }
-          throw new Exception("Readers are not equal");
+    }
+    try{
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    for (int i = 0; i < readers.length; i++) {
+      for(int j = 0; j < readers.length; j++) {
+        if(i == j) {
+          continue;
         }
+        if(dataStorage[i].equals(dataStorage[j])) {
+          continue;
+        }
+        throw new Exception("Readers are not equal");
       }
     }
     System.out.println("TestReadData finished");
@@ -97,8 +104,8 @@ public class DataReaderTest {
       for (int j = 0; j < data[i].length; j++) {
         data[i][j] = random.nextDouble() * 100;
         currentTime += 10 * random.nextInt(10);
-        if(j % 5 == 0) {
-          timestamps[i][j/5] = currentTime;
+        if(j % entriesPerTimestamp == 0) {
+          timestamps[i][j/entriesPerTimestamp] = currentTime;
         }
         reference.addPatientData(
             i, data[i][j], label, currentTime);
@@ -110,7 +117,8 @@ public class DataReaderTest {
     for(int i = 0; i < readers.length; i++) {
       for (int j = 0; j < data.length; j++) {
         for (int k = 0; k < data[j].length; k++) {
-          outputs[i].output(j, timestamps[j][k/5]+k%5,
+          outputs[i].output(j, timestamps[j][k/entriesPerTimestamp]
+              +k%entriesPerTimestamp,
               label, Double.toString(data[j][k]));
         }
       }
@@ -120,7 +128,7 @@ public class DataReaderTest {
   private void validate(DataStorage storage){
     for (int i = 0; i < data.length; i++) {
       //segment data into different timeframes
-      for(int index = 0; index < timestamps[i].length; index++) {
+      for(int index = 0; index < timestampCount; index++) {
         List<PatientRecord> record = storage.getRecords(
             i, timestamps[i][index], timestamps[i][index+1]-1);
         validateRecord(record, i, index);
@@ -130,13 +138,12 @@ public class DataReaderTest {
 
   private void validateRecord(List<PatientRecord> record, int patientIndex,
       int timeIndex){
-    int dataIndex = timeIndex * 5;
+    int dataIndex = timeIndex * entriesPerTimestamp;
     for (int i = 0; i < record.size(); i++) {
       assertEquals(timestamps[patientIndex][timeIndex]+i,
           record.get(i).getTimestamp());
       assertEquals(data[patientIndex][dataIndex+i],
           record.get(i).getMeasurementValue());
-      dataIndex++;
     } 
   }
 }

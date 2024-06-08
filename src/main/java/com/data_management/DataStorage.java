@@ -22,8 +22,8 @@ public class DataStorage {
      * structure.
      */
     public DataStorage() {
-        this.dataStorage = this;
         this.patientMap = new HashMap<>();
+        this.dataStorage = this;
     }
 
     public DataStorage getInstance() {
@@ -119,6 +119,14 @@ public class DataStorage {
     }
 
     public boolean equals(DataStorage dataStorage) {
-        return this.patientMap.equals(dataStorage.patientMap);
+      for (int key : patientMap.keySet()) {
+        if (!dataStorage.patientMap.containsKey(key)) {
+          return false;
+        }
+        if (!patientMap.get(key).equals(dataStorage.patientMap.get(key))) {
+          return false;
+        }
+      }
+      return true;
     }
 }

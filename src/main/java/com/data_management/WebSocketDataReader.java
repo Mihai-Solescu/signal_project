@@ -10,13 +10,16 @@ import java.io.IOException;
 
 public class WebSocketDataReader extends WebSocketClient implements DataReader {
   private String datacontent = "";
+  private int lineNumber = 0;
   private DataStorage dataStorage = new DataStorage();
   public WebSocketDataReader(URI serverUri, Draft draft) {
     super(serverUri, draft);
+    super.connect();
   }
 
   public WebSocketDataReader(URI serverUri) {
     super(serverUri);
+    super.connect();
   }
 
   public String[] format(String data) {
@@ -46,8 +49,7 @@ public class WebSocketDataReader extends WebSocketClient implements DataReader {
   public void readData(DataStorage dataStorage) throws IOException{
     this.dataStorage = dataStorage;
     Reader reader = new StringReader(datacontent);
-    decodeData(reader, dataStorage, 0);
-    datacontent = "";
+    lineNumber = decodeData(reader, dataStorage, 0);
   }
 
   @Override
@@ -57,7 +59,6 @@ public class WebSocketDataReader extends WebSocketClient implements DataReader {
 
   public void update() throws IOException {
     Reader reader = new StringReader(datacontent);
-    decodeData(reader, dataStorage, 0);
-    datacontent = "";
+    lineNumber = decodeData(reader, dataStorage, lineNumber);
   }
 }

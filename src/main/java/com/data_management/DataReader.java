@@ -13,6 +13,8 @@ public interface DataReader {
      */
     void readData(DataStorage dataStorage) throws IOException;
     void update() throws IOException;
+    //format data
+    //patientId, timestamp, label, data
     String[] format(String data);
     default int decodeData(
         Reader in, DataStorage dataStorage, int lineNumber) throws IOException{
@@ -38,8 +40,8 @@ public interface DataReader {
         }
         try {
           int patientId = Integer.parseInt(parts[0]);
-          String Label = parts[1];
-          long timestamp = Long.parseLong(parts[2]);
+          long timestamp = Long.parseLong(parts[1]);
+          String Label = parts[2];
           String DataFull = parts[3];
           double data = 0;
           if(DataFull.contains("%")) {

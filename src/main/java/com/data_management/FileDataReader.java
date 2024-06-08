@@ -15,7 +15,7 @@ public class FileDataReader implements DataReader, IObserver {
   public FileDataReader(String Filename) {
     File = Filename;
   }
-
+  
   public String[] format(String data) {
     String[] parts = data.split(",");
     for (int i = 0; i < parts.length; i++) {
