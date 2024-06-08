@@ -18,14 +18,26 @@ public class BloodPressureStrategy implements AlertStrategy {
     @Override
     public Alert checkAlert(Patient patient) {
       // check trend
-      List<PatientRecord> lastThreeRecords = patient.getLastRecords(3, "SystolicPressure");
-      if (!(lastThreeRecords.size() < 3)) {
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() > CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() > CHANGE_THRESHOLD) {
+      List<PatientRecord> lastThreeRecords = patient.getLastRecords(3, "DiastolicPressure");
+      if (lastThreeRecords.size() == 3) {
+        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() >= CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureIncreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() < -CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() < -CHANGE_THRESHOLD) {
+        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() <= -CHANGE_THRESHOLD) {
+          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureDecreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
+        }
+      }
+
+      lastThreeRecords = patient.getLastRecords(3, "SystolicPressure");
+      if (lastThreeRecords.size() == 3) {
+        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() >= CHANGE_THRESHOLD) {
+          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureIncreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
+        }
+        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() <= -CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureDecreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
       }
@@ -34,12 +46,12 @@ public class BloodPressureStrategy implements AlertStrategy {
       PatientRecord lastRecord = patient.getLastRecord("SystolicPressure");
       if (lastRecord != null) {
         if (lastRecord.getMeasurementValue() > HIGH_SYSTOLIC_THRESHOLD) {
-          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureOverThresholdAlert",
+          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureOverSystolicThresholdAlert",
               lastRecord.getTimestamp());
         }
         if (lastRecord.getMeasurementValue() < LOW_SYSTOLIC_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(),
-              "BloodPressureUnderThresholdAlert", lastRecord.getTimestamp());
+              "BloodPressureUnderSystolicThresholdAlert", lastRecord.getTimestamp());
         }
       }
 
@@ -47,12 +59,12 @@ public class BloodPressureStrategy implements AlertStrategy {
       lastRecord = patient.getLastRecord("DiastolicPressure");
       if (lastRecord != null) {
         if (lastRecord.getMeasurementValue() > HIGH_DIASTOLIC_THRESHOLD) {
-          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureOverThresholdAlert",
+          return alertFactory.createAlert(patient.getPatientId(), "BloodPressureOverDiastolicThresholdAlert",
               lastRecord.getTimestamp());
         }
         if (lastRecord.getMeasurementValue() < LOW_DIASTOLIC_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(),
-              "BloodPressureUnderThresholdAlert", lastRecord.getTimestamp());
+              "BloodPressureUnderDiastolicThresholdAlert", lastRecord.getTimestamp());
         }
       }
 
