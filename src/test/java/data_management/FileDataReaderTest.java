@@ -18,7 +18,8 @@ class FileDataReaderTest {
     DataStorage dataStorage = new DataStorage();
     fileDataReader.readData(dataStorage);
     List<PatientRecord> record = dataStorage.getRecords(52, 0, 1712822479140l);
-    assertEquals(12, record.size());
+    assertEquals(7, record.size());
+    record = dataStorage.getRecords(70, 1712822468144L, 1712822468144L);
+    assertEquals(1, record.size());
   }
-  
 }

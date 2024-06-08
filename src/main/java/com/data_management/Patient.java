@@ -39,11 +39,15 @@ public class Patient {
       double measurementValue, String recordType, long timestamp) {
     PatientRecord record = new PatientRecord(
         this.patientId, measurementValue, recordType, timestamp);
+    if (patientRecords.size() == 0) {
+      patientRecords.add(record);
+      return;
+    }
     //search for correct insertion point
     //linear search from the end of the list
     for (int i = patientRecords.size() - 1; i > -1; i--) {
       if (patientRecords.get(i).getTimestamp() <= timestamp) {
-        patientRecords.add(i, record);
+        patientRecords.add(i + 1, record);
         return;
       }
     }
@@ -64,6 +68,10 @@ public class Patient {
     //binary search for timestamp start time
     int current = (patientRecords.size() / 2)-1;
     while(true) {
+      if(startTime < patientRecords.get(0).getTimestamp()) {
+        current = 0;
+        break;
+      }
       if (current + 1 >= patientRecords.size() || current < 0) {
         return new ArrayList<>();
       }
@@ -78,7 +86,7 @@ public class Patient {
       }
     }
     //has to be in bound because of check above
-    int start = current + 1;
+    int start = current;
     PatientRecord currentRecord = patientRecords.get(start);
     List<PatientRecord> records = new ArrayList<>();
     while(currentRecord.getTimestamp() <= endTime &&

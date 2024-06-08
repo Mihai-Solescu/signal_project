@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class WebSocketDataReader extends WebSocketClient implements DataReader {
   private String datacontent = "";
+  private DataStorage dataStorage = new DataStorage();
   public WebSocketDataReader(URI serverUri, Draft draft) {
     super(serverUri, draft);
   }
@@ -39,13 +40,20 @@ public class WebSocketDataReader extends WebSocketClient implements DataReader {
   }
 
   public void readData(DataStorage dataStorage) throws IOException{
+    this.dataStorage = dataStorage;
     Reader reader = new StringReader(datacontent);
-    decodeData(reader, dataStorage);
+    decodeData(reader, dataStorage, 0);
     datacontent = "";
   }
 
   @Override
   protected void finalize() throws Throwable {
     super.close();
+  }
+
+  public void update() throws IOException {
+    Reader reader = new StringReader(datacontent);
+    decodeData(reader, dataStorage, 0);
+    datacontent = "";
   }
 }

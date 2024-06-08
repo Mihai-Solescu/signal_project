@@ -10,6 +10,7 @@ import com.observer.IObserver;
 public class FileDataReader implements DataReader, IObserver {
   private String File = null;
   private DataStorage dataStorage = null;
+  private int lineNumber = 0;
 
   public FileDataReader(String Filename) {
     File = Filename;
@@ -20,10 +21,12 @@ public class FileDataReader implements DataReader, IObserver {
     this.dataStorage = dataStorage;
     //read from file to string
     FileReader reader = new FileReader(File);
-    decodeData(reader, dataStorage);
+    lineNumber = decodeData(reader, dataStorage, 0);
   }
 
   public void update() throws IOException{
-    readData(dataStorage);
+    //start a new string at the last read line
+    FileReader reader = new FileReader(File);
+    lineNumber = decodeData(reader, dataStorage, lineNumber);
   }
 }

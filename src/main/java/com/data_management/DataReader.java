@@ -2,8 +2,9 @@ package com.data_management;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 
-public interface DataReader{
+public interface DataReader {
     /**
      * Reads data from a specified source and stores it in the data storage.
      * 
@@ -11,8 +12,9 @@ public interface DataReader{
      * @throws IOException if there is an error reading the data
      */
     void readData(DataStorage dataStorage) throws IOException;
-    default void decodeData(
-        Reader in, DataStorage dataStorage) throws IOException{
+    void update() throws IOException;
+    default int decodeData(
+        Reader in, DataStorage dataStorage, int lineNumber) throws IOException{
       int charVal;
       String dataString = "";
       while ((charVal = in.read()) != -1) {
@@ -21,6 +23,7 @@ public interface DataReader{
       in.close();
       //parse string to data
       String[] lines = dataString.split("\n");
+      lines = Arrays.copyOfRange(lines, lineNumber, lines.length);
       for (String line : lines) {
         String[] parts = line.split(",");
         if (parts.length != 4) {
@@ -47,5 +50,6 @@ public interface DataReader{
           throw new IOException("Invalid data format no proper number conversion possible");
         }
       }
+      return lines.length;
   }
 }
