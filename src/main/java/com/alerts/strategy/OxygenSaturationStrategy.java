@@ -6,10 +6,11 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 
+import static com.alerts.AlertConstants.SATURATION_DROP_THRESHOLD;
+import static com.alerts.AlertConstants.SATURATION_LEVEL_THRESHOLD;
+
 public class OxygenSaturationStrategy implements AlertStrategy {
     private static final BloodOxygenAlertFactory alertFactory = new BloodOxygenAlertFactory();
-    private static final double SATURATION_LEVEL_THRESHOLD = 92.0;
-    private static final double SATURATION_DROP_THRESHOLD = 5.0;
 
     @Override
     public Alert checkAlert(Patient patient) {
@@ -20,7 +21,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
       }
 
       // check rapid drop //TODO: find better complexity algorithm for checking rapid drop
-      List<PatientRecord> lastTenMinRecords = patient.getRecords(System.currentTimeMillis() - 10*60*1000, System.currentTimeMillis());
+      List<PatientRecord> lastTenMinRecords = patient.getRecords(System.currentTimeMillis() - 10*60*1000, System.currentTimeMillis(), "Saturation");
       for (int i = 0; i < lastTenMinRecords.size(); i++) {
         for (int j = i + 1; j < lastTenMinRecords.size(); j++)
           if (lastTenMinRecords.get(i).getMeasurementValue() - lastTenMinRecords.get(j).getMeasurementValue() > SATURATION_DROP_THRESHOLD) {

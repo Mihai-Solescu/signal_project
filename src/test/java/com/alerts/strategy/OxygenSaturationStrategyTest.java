@@ -36,7 +36,7 @@ class OxygenSaturationStrategyTest {
     patient.addRecord(94, "Saturation", System.currentTimeMillis() - 4000);
     patient.addRecord(95, "Saturation", System.currentTimeMillis() - 3000);
     patient.addRecord(96, "Saturation", System.currentTimeMillis() - 2000);
-    patient.addRecord(97, "Saturation", System.currentTimeMillis() - 1000);
+    patient.addRecord(98, "Saturation", System.currentTimeMillis() - 1000);
 
     OxygenSaturationStrategy oxygenSaturationStrategy = new OxygenSaturationStrategy();
     assertNull(oxygenSaturationStrategy.checkAlert(patient));

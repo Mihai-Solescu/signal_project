@@ -25,6 +25,21 @@ class PatientTest {
   }
 
   @Test
+  void getFilteredRecords() {
+    Patient patient = new Patient(1);
+    patient.addRecord(110, "SystolicPressure", 1000);
+    patient.addRecord(99, "Saturation", 2000);
+    patient.addRecord(120, "SystolicPressure", 3000);
+    patient.addRecord(140, "SystolicPressure", 4000);
+
+    List<PatientRecord> recs = patient.getRecords(1000, 3000, "SystolicPressure");
+    assertEquals(2, recs.size());
+
+    assertEquals(110, recs.get(0).getMeasurementValue());
+    assertEquals(120, recs.get(1).getMeasurementValue());
+  }
+
+  @Test
   void getLastRecords() {
     Patient patient = new Patient(1);
     patient.addRecord(120, "SystolicPressure", 1000);

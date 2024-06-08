@@ -1,10 +1,8 @@
 package com.alerts;
 
 import com.alerts.alert.Alert;
-import com.alerts.alert.BloodPressureAlert;
 import com.alerts.strategy.AlertStrategy;
 import com.alerts.strategy.BloodPressureStrategy;
-import com.alerts.strategy.HeartRateStrategy;
 import com.alerts.strategy.OxygenSaturationStrategy;
 import com.data_management.DataStorage;
 import com.data_management.Patient;
@@ -36,7 +34,6 @@ public class AlertGenerator {
         this.dataStorage = dataStorage;
         this.alertStrategies = new ArrayList<>();
         this.alertStrategies.add(new BloodPressureStrategy());
-        this.alertStrategies.add(new HeartRateStrategy());
         this.alertStrategies.add(new OxygenSaturationStrategy());
     }
 

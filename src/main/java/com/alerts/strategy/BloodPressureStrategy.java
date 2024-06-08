@@ -7,37 +7,38 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import java.util.List;
 
+import static com.alerts.AlertConstants.CHANGE_THRESHOLD;
+import static com.alerts.AlertConstants.HIGH_DIASTOLIC_THRESHOLD;
+import static com.alerts.AlertConstants.HIGH_SYSTOLIC_THRESHOLD;
+import static com.alerts.AlertConstants.LOW_DIASTOLIC_THRESHOLD;
+import static com.alerts.AlertConstants.LOW_SYSTOLIC_THRESHOLD;
+
 public class BloodPressureStrategy implements AlertStrategy {
     private static final BloodPressureAlertFactory alertFactory = new BloodPressureAlertFactory();
-    private static final int CHANGE_THRESHOLD = 10;
-    private static final int HIGH_SYSTOLIC_THRESHOLD = 90;
-    private static final int LOW_SYSTOLIC_THRESHOLD = 60;
-    private static final int HIGH_DIASTOLIC_THRESHOLD = 180;
-    private static final int LOW_DIASTOLIC_THRESHOLD = 90;
 
     @Override
     public Alert checkAlert(Patient patient) {
       // check trend
       List<PatientRecord> lastThreeRecords = patient.getLastRecords(3, "DiastolicPressure");
       if (lastThreeRecords.size() == 3) {
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() >= CHANGE_THRESHOLD) {
+        if (lastThreeRecords.get(2).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(0).getMeasurementValue() >= CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureIncreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() <= -CHANGE_THRESHOLD) {
+        if (lastThreeRecords.get(2).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(0).getMeasurementValue() <= -CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureDecreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
       }
 
       lastThreeRecords = patient.getLastRecords(3, "SystolicPressure");
       if (lastThreeRecords.size() == 3) {
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() >= CHANGE_THRESHOLD) {
+        if (lastThreeRecords.get(2).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() >= CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(0).getMeasurementValue() >= CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureIncreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
-        if (lastThreeRecords.get(0).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
-            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(2).getMeasurementValue() <= -CHANGE_THRESHOLD) {
+        if (lastThreeRecords.get(2).getMeasurementValue() - lastThreeRecords.get(1).getMeasurementValue() <= -CHANGE_THRESHOLD
+            && lastThreeRecords.get(1).getMeasurementValue() - lastThreeRecords.get(0).getMeasurementValue() <= -CHANGE_THRESHOLD) {
           return alertFactory.createAlert(patient.getPatientId(), "BloodPressureDecreasingTrendAlert", lastThreeRecords.get(0).getTimestamp());
         }
       }

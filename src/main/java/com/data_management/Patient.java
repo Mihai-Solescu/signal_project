@@ -102,6 +102,31 @@ public class Patient {
   }
 
   /**
+   * Retrieves a list of PatientRecord objects for this patient that fall within a
+   * specified time range and have a specified record type.
+   * The method filters records based on the start and end times provided, as well
+   * as the record type.
+   *
+   * @param startTime  the start of the time range, in milliseconds since UNIX
+   *                   epoch
+   * @param endTime    the end of the time range, in milliseconds since UNIX epoch
+   * @param recordType the type of record to retrieve, e.g., "HeartRate",
+   *                   "BloodPressure"
+   * @return a list of PatientRecord objects that fall within the specified time
+   *         range and have the specified record type
+   */
+  public List<PatientRecord> getRecords(long startTime, long endTime, String recordType) {
+    List<PatientRecord> records = getRecords(startTime, endTime);
+    List<PatientRecord> filteredRecords = new ArrayList<>();
+    for (PatientRecord record : records) {
+      if (record.getRecordType().equals(recordType)) {
+        filteredRecords.add(record);
+      }
+    }
+    return filteredRecords;
+  }
+
+  /**
    * Retrieves the last n PatientRecord objects for this patient.
    * The method returns the most recent n records in the patient's record list.
    *
@@ -118,7 +143,13 @@ public class Patient {
         break;
       }
     }
-    return records;
+
+    List<PatientRecord> reversed = new ArrayList<>();
+    for (int i = records.size() - 1; i > -1; i--) {
+      reversed.add(records.get(i));
+    }
+
+    return reversed;
   }
 
   /**
