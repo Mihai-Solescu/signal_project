@@ -15,10 +15,10 @@ class BloodPressureStrategyTest {
   @Test
   void nullBloodPressureAlert() {
     Patient patient = new Patient(1);
-    patient.addRecord(120, "SystolicPressure", 1000);
-    patient.addRecord(130, "SystolicPressure", 2000);
-    patient.addRecord(120, "SystolicPressure", 3000);
-    patient.addRecord(130, "SystolicPressure", 4000);
+    patient.addRecord(120, "DiastolicPressure", 1000);
+    patient.addRecord(130, "DiastolicPressure", 2000);
+    patient.addRecord(120, "DiastolicPressure", 3000);
+    patient.addRecord(130, "DiastolicPressure", 4000);
 
     AlertGenerator alertGenerator = new AlertGenerator(null);
     alertGenerator.evaluateData(patient);
@@ -32,9 +32,9 @@ class BloodPressureStrategyTest {
   @Test
   void bloodPressureIncreasingTrendAlert() {
     Patient patient = new Patient(1);
-    patient.addRecord(120, "SystolicPressure", 1000);
-    patient.addRecord(130, "SystolicPressure", 2000);
-    patient.addRecord(140, "SystolicPressure", 3000);
+    patient.addRecord(120, "DiastolicPressure", 1000);
+    patient.addRecord(130, "DiastolicPressure", 2000);
+    patient.addRecord(140, "DiastolicPressure", 3000);
 
     AlertGenerator alertGenerator = new AlertGenerator(null);
     alertGenerator.evaluateData(patient);
@@ -42,6 +42,23 @@ class BloodPressureStrategyTest {
     BloodPressureStrategy bloodPressureAlertStrategy = new BloodPressureStrategy();
     Alert alert = bloodPressureAlertStrategy.checkAlert(patient);
 
-    assertEquals("BloodPressureDecreasingTrendAlert", alert.getCondition());
+    assertEquals("BloodPressureIncreasingTrendAlert", alert.getCondition());
+  }
+
+  @Test
+  void bloodPressureOverThresholdAlert() {
+    Patient patient = new Patient(1);
+    patient.addRecord(120, "DiastolicPressure", 1000);
+    patient.addRecord(130, "DiastolicPressure", 2000);
+    patient.addRecord(120, "DiastolicPressure", 3000);
+    patient.addRecord(190, "DiastolicPressure", 4000);
+
+    AlertGenerator alertGenerator = new AlertGenerator(null);
+    alertGenerator.evaluateData(patient);
+
+    BloodPressureStrategy bloodPressureAlertStrategy = new BloodPressureStrategy();
+    Alert alert = bloodPressureAlertStrategy.checkAlert(patient);
+
+    assertEquals("BloodPressureOverDiastolicThresholdAlert", alert.getCondition());
   }
 }
