@@ -108,4 +108,8 @@ public class DataStorage {
             alertGenerator.evaluateData(patient);
         }
     }
+
+    public boolean equals(DataStorage dataStorage) {
+        return this.patientMap.equals(dataStorage.patientMap);
+    }
 }
