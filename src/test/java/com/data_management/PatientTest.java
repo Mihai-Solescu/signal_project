@@ -50,9 +50,9 @@ class PatientTest {
     List<PatientRecord> recs = patient.getLastRecords(3, "SystolicPressure");
     assertEquals(3, recs.size());
 
-    assertEquals(140, recs.get(0).getMeasurementValue());
+    assertEquals(130, recs.get(0).getMeasurementValue());
     assertEquals(120, recs.get(1).getMeasurementValue());
-    assertEquals(130, recs.get(2).getMeasurementValue());
+    assertEquals(140, recs.get(2).getMeasurementValue());
   }
 
   @Test
@@ -65,5 +65,21 @@ class PatientTest {
 
     PatientRecord rec = patient.getLastRecord("SystolicPressure");
     assertEquals(140, rec.getMeasurementValue());
+  }
+
+  @Test
+  void sameTimestampDifferentTypes() {
+    Patient patient = new Patient(1);
+    patient.addRecord(120, "SystolicPressure", 1000);
+    patient.addRecord(130, "SystolicPressure", 2000);
+    patient.addRecord(120, "SystolicPressure", 3000);
+    patient.addRecord(130, "SystolicPressure", 4000);
+    patient.addRecord(140, "DiastolicPressure", 4000);
+
+    List<PatientRecord> recs = patient.getRecords(4000, 4000);
+    assertEquals(2, recs.size());
+
+    assertEquals(130, recs.get(0).getMeasurementValue());
+    assertEquals(140, recs.get(1).getMeasurementValue());
   }
 }

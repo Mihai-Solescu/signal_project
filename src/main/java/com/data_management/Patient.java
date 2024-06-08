@@ -46,10 +46,10 @@ public class Patient {
     //search for correct insertion point
     //linear search from the end of the list
     for (int i = patientRecords.size() - 1; i > -1; i--) {
-      if (patientRecords.get(i).getTimestamp() == timestamp) {
+      if (patientRecords.get(i).getTimestamp() == timestamp && patientRecords.get(i).getRecordType().equals(recordType)) {
         return;
       }
-      if (patientRecords.get(i).getTimestamp() < timestamp) {
+      if (patientRecords.get(i).getTimestamp() <= timestamp) {
         patientRecords.add(i + 1, record);
         return;
       }
@@ -85,7 +85,9 @@ public class Patient {
       } else if (right.getTimestamp() < startTime) {
         current += (patientRecords.size() - current) / 2;
       } else if (right.getTimestamp() == startTime) {
-        current++;
+        if(left.getTimestamp() != startTime) {
+          current++;
+        }
         break;
       }else {
         break;
