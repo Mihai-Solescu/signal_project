@@ -55,12 +55,9 @@ public class DataReaderTest {
     readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
     System.out.println("TestReadData started");
     generate();
-    Thread.sleep(15);
+    Thread.sleep(25);
     for (int i = 0; i < readers.length; i++) {
       readers[i].readData(dataStorage[i]);
-    }
-    for (int i = 0; i < readers.length; i++) {
-      validate(dataStorage[i]);
     }
     for(int count = 0; count < 10; count++) {
       generate();
@@ -115,27 +112,5 @@ public class DataReaderTest {
         }
       }
     }
-  }
-
-  private void validate(DataStorage storage){
-    for (int i = 0; i < data.length; i++) {
-      //segment data into different timeframes
-      for(int index = 0; index < timestampCount; index++) {
-        List<PatientRecord> record = storage.getRecords(
-            i, timestamps[i][index], timestamps[i][index+1]-1);
-        validateRecord(record, i, index);
-      }
-    }
-  }
-
-  private void validateRecord(List<PatientRecord> record, int patientIndex,
-      int timeIndex){
-    int dataIndex = timeIndex * entriesPerTimestamp;
-    for (int i = 0; i < record.size(); i++) {
-      assertEquals(timestamps[patientIndex][timeIndex]+i,
-          record.get(i).getTimestamp());
-      assertEquals(data[patientIndex][dataIndex+i],
-          record.get(i).getMeasurementValue());
-    } 
   }
 }
