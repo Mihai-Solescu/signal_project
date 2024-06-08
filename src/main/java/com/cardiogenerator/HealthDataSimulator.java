@@ -46,12 +46,13 @@ public class HealthDataSimulator {
    */
   public static void main(String[] args) throws IOException {
 
-    HealthDataSimulator.getInstance().parseArguments(args);
+    HealthDataSimulator.getInstance(args);
 
   }
 
-  private HealthDataSimulator() {
+  private HealthDataSimulator(String[] args) throws IOException {
       this.scheduler = Executors.newScheduledThreadPool(patientCount * 4);
+      this.parseArguments(args);
 
       // Randomize the order of patient IDs
       List<Integer> patientIds = initializePatientIds(patientCount);
@@ -60,9 +61,16 @@ public class HealthDataSimulator {
       scheduleTasksForPatients(patientIds);
   }
 
-  public static HealthDataSimulator getInstance() {
+  public static HealthDataSimulator getInstance(String[] args) throws IOException {
     if (instance == null) {
-      instance = new HealthDataSimulator();
+      instance = new HealthDataSimulator(args);
+    }
+    return instance;
+  }
+
+  public static HealthDataSimulator getInstance() throws IOException {
+    if (instance == null) {
+      instance = new HealthDataSimulator(new String[0]);
     }
     return instance;
   }
