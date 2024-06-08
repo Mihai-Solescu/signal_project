@@ -1,18 +1,18 @@
-package com.alerts;
+package com.alerts.alert;
 
 // Represents an alert
 public class Alert {
-    private String patientId;
+    private int patientId;
     private String condition;
     private long timestamp;
 
-    public Alert(String patientId, String condition, long timestamp) {
+    public Alert(int patientId, String condition, long timestamp) {
         this.patientId = patientId;
         this.condition = condition;
         this.timestamp = timestamp;
     }
 
-    public String getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
 

@@ -100,4 +100,46 @@ public class Patient {
     }
     return records;
   }
+
+  /**
+   * Retrieves the last n PatientRecord objects for this patient.
+   * The method returns the most recent n records in the patient's record list.
+   *
+   * @param number the number of records to retrieve
+   * @return a list of the last n PatientRecord objects for this patient
+   */
+  public List<PatientRecord> getLastRecords(int number, String recordType) {
+    List<PatientRecord> records = new ArrayList<>();
+    for (int i = patientRecords.size() - 1; i > -1; i--) {
+      if (patientRecords.get(i).getRecordType().equals(recordType)) {
+        records.add(patientRecords.get(i));
+      }
+      if (records.size() == number) {
+        break;
+      }
+    }
+    return records;
+  }
+
+  /**
+   * Retrieves the last PatientRecord object of a specified type for this patient.
+   * The method returns the most recent record of the specified type in the patient's
+   * record list.
+   *
+   * @param recordType the type of record to retrieve, e.g., "HeartRate",
+   *                   "BloodPressure"
+   * @return the last PatientRecord object of the specified type for this patient
+   */
+  public PatientRecord getLastRecord(String recordType) {
+    for (int i = patientRecords.size() - 1; i > -1; i--) {
+      if (patientRecords.get(i).getRecordType().equals(recordType)) {
+        return patientRecords.get(i);
+      }
+    }
+    return null;
+  }
+
+  public int getPatientId() {
+    return patientId;
+  }
 }

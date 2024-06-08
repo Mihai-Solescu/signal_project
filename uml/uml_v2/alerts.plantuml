@@ -73,13 +73,13 @@ rectangle "Alert Generation System" as AGS {
 
     AS <|-- BPS
 
-    class "BloodOxygenStragegy" as BOS {
+    class "HeartRateStragegy" as BOS {
 
     }
 
     AS <|-- BOS
 
-    class "ECGStragegy" as ECGS {
+    class "OxygenSaturationStragegy" as ECGS {
 
     }
 
