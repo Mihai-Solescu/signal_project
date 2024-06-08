@@ -13,7 +13,7 @@ public class TCPDataReader implements DataReader {
   private Socket socket;
   private DataStorage dataStorage;
 
-  TCPDataReader(InetAddress address, int port) throws IOException {
+  public TCPDataReader(InetAddress address, int port) throws IOException {
     socket = new Socket(address, port);
   }
   

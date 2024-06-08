@@ -25,6 +25,7 @@ public class FileDataReader implements DataReader, IObserver {
   }
 
   public void update() throws IOException{
+    //assuming that the file is only appended to
     //start a new string at the last read line
     FileReader reader = new FileReader(File);
     lineNumber = decodeData(reader, dataStorage, lineNumber);
