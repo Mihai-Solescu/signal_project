@@ -77,6 +77,11 @@ public class DataReaderTest {
         readers[i].update();
       }
     }
+    try{
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     for (int i = 0; i < readers.length; i++) {
       for(int j = 0; j < readers.length; j++) {
         if(i == j) {
