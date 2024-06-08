@@ -19,6 +19,10 @@ public class WebSocketDataReader extends WebSocketClient implements DataReader {
     super(serverUri);
   }
 
+  public String[] format(String data) {
+    return data.split(",");
+  }
+
   @Override
   public void onOpen(ServerHandshake handshakedata) {
     System.out.println("opened connection");

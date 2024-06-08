@@ -16,6 +16,14 @@ public class FileDataReader implements DataReader, IObserver {
     File = Filename;
   }
 
+  public String[] format(String data) {
+    String[] parts = data.split(",");
+    for (int i = 0; i < parts.length; i++) {
+      parts[i] = parts[i].split(":")[1].trim();
+    }
+    return parts;
+  }
+
   @Override
   public void readData(DataStorage dataStorage) throws IOException {
     this.dataStorage = dataStorage;

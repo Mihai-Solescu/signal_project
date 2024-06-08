@@ -13,6 +13,7 @@ public interface DataReader {
      */
     void readData(DataStorage dataStorage) throws IOException;
     void update() throws IOException;
+    String[] format(String data);
     default int decodeData(
         Reader in, DataStorage dataStorage, int lineNumber) throws IOException{
       int charVal;
@@ -31,19 +32,15 @@ public interface DataReader {
         return 0;
       }
       for (String line : lines) {
-        String[] parts = line.split(",");
+        String[] parts = format(line);
         if (parts.length != 4) {
           throw new IOException("Invalid data format to many properties");
         }
         try {
-          int patientId = Integer.parseInt(
-              parts[0].split(":")[1].trim());
-          long timestamp = Long.parseLong(
-              parts[1].split(":")[1].trim());
-          String Label = 
-            parts[2].split(":")[1].trim();
-          String DataFull = 
-            parts[3].split(":")[1].trim();
+          int patientId = Integer.parseInt(parts[0]);
+          String Label = parts[1];
+          long timestamp = Long.parseLong(parts[2]);
+          String DataFull = parts[3];
           double data = 0;
           if(DataFull.contains("%")) {
             data = Double.parseDouble(DataFull.substring(0, DataFull.length()-1));

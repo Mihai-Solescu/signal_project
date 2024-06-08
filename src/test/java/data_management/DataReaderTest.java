@@ -3,13 +3,11 @@ package data_management;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.cardiogenerator.generators.BloodLevelsDataGenerator;
 import com.cardiogenerator.outputs.FileOutputStrategy;
 import com.cardiogenerator.outputs.OutputStrategy;
 import com.data_management.DataReader;
 import com.data_management.DataStorage;
 import com.data_management.FileDataReader;
-import com.data_management.Patient;
 import com.data_management.PatientRecord;
 import com.data_management.TCPDataReader;
 import com.data_management.WebSocketDataReader;
@@ -55,6 +53,11 @@ public class DataReaderTest {
     readers[2] = new WebSocketDataReader(new URI("localhost:1235"));
     System.out.println("TestReadData started");
     generate();
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     for (int i = 0; i < readers.length; i++) {
       readers[i].readData(dataStorage[i]);
     }
@@ -62,6 +65,12 @@ public class DataReaderTest {
       validate(dataStorage[i]);
     }
     for(int count = 0; count < 10; count++) {
+      generate();
+      try {
+        Thread.sleep(25);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
       for (int i = 0; i < readers.length; i++) {
         readers[i].update();
       }
@@ -77,7 +86,7 @@ public class DataReaderTest {
         }
       }
     }
-
+    System.out.println("TestReadData finished");
   }
 
   private void generate() throws Exception{
