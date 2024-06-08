@@ -19,9 +19,12 @@ public class WebSocketOutputStrategy implements OutputStrategy {
   public void output(int patientId, long timestamp, String label, String data) {
     String message = String.format("%d,%d,%s,%s", patientId, timestamp, label, data);
     // Broadcast the message to all connected clients
-    for (WebSocket conn : server.getConnections()) {
-      conn.send(message);
-    }
+    Thread t = new Thread(() -> {
+      for (WebSocket conn : server.getConnections()) {
+        conn.send(message);
+      }
+    });
+    t.run();
   }
 
   private static class SimpleWebSocketServer extends WebSocketServer {

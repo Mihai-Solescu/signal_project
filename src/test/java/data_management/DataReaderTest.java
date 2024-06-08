@@ -55,11 +55,7 @@ public class DataReaderTest {
     readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
     System.out.println("TestReadData started");
     generate();
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    Thread.sleep(15);
     for (int i = 0; i < readers.length; i++) {
       readers[i].readData(dataStorage[i]);
     }
@@ -77,11 +73,7 @@ public class DataReaderTest {
         readers[i].update();
       }
     }
-    try{
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    Thread.sleep(15);
     for (int i = 0; i < readers.length; i++) {
       for(int j = 0; j < readers.length; j++) {
         if(i == j) {
