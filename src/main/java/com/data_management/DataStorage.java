@@ -116,16 +116,4 @@ public class DataStorage {
             alertGenerator.evaluateData(patient);
         }
     }
-
-    public boolean equals(DataStorage dataStorage) {
-      for (int key : patientMap.keySet()) {
-        if (!dataStorage.patientMap.containsKey(key)) {
-          return false;
-        }
-        if (!patientMap.get(key).equals(dataStorage.patientMap.get(key))) {
-          return false;
-        }
-      }
-      return true;
-    }
 }
