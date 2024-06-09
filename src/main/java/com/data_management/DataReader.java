@@ -12,10 +12,25 @@ public interface DataReader {
      * @throws IOException if there is an error reading the data
      */
     void readData(DataStorage dataStorage) throws IOException;
+    /**
+     * Loads data since last data into data storage
+     * @throws IOException if the input throws on read
+     */
     void update() throws IOException;
-    //format data
-    //patientId, timestamp, label, data
+    /**
+     * format data
+     * @param String to format
+     * @return {patientId, timestamp, label, data}
+     */
     String[] format(String data);
+    /**
+     * decode certain amount of data
+     * @param in reader for data input
+     * @param dataStorage storage to write to
+     * @param lineNumber line to start reading
+     * @throws if input reader throws on read
+     * @return last line that has been read + 1
+     */
     default int decodeData(
         Reader in, DataStorage dataStorage, int lineNumber) throws IOException{
       int charVal;

@@ -5,20 +5,29 @@ rectangle "data_management" as DM {
 
     interface "DataReader" as DL {
         + void readData(dataStorage : DataStorage)
+        - int decodeData(input : Reader, dataStorage : DataStorage, startLine : int)
+        + void update()
+        - format()
     }
 
     DS <-- DL
 
     class "FileDataReader" as FDL {
         + void readData(dataStorage : DataStorage)
+        + void update()
+        - format()
     }
 
     class "WebSocketDataReader" as WSDR {
         + void readData(dataStorage : DataStorage)
+        + void update()
+        - format()
     }
 
     class "TCPDataReader" as TDR {
         + void readData(dataStorage : DataStorage)
+        + void update()
+        - format()
     }
 
     DL <|.. FDL

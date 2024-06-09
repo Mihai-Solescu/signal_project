@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
+import com.cardiogenerator.outputs.TcpOutputStrategy;
+import java.net.InetAddress;
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -90,14 +94,11 @@ public class DataStorage {
      * 
      * @param args command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         // DataReader is not defined in this scope, should be initialized appropriately.
-        // DataReader reader = new SomeDataReaderImplementation("path/to/data");
+        DataReader reader = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
         DataStorage storage = DataStorage.getInstance();
-
-        // Assuming the reader has been properly initialized and can read data into the
-        // storage
-        // reader.readData(storage);
+        reader.readData(storage);
 
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
@@ -116,4 +117,59 @@ public class DataStorage {
             alertGenerator.evaluateData(patient);
         }
     }
+
+    private DataReader[] parseArguments(String[] args) {
+      ArrayList<DataReader> reader = new ArrayList<>();
+      int count = 0;
+      for (int i = 0; i < args.length; i++) {
+       switch (args[i]) {
+        case "-h":
+          printHelp();
+          break;
+        case "--input":
+          if (i + 2 < args.length) {
+            switch (args[i + 1]) {
+              case "tcp":
+                try {
+                  String[] address = args[i + 2].split(":");
+                  int port = Integer.parseInt(address[1]);
+                  reader.add(new TCPDataReader(
+                      InetAddress.getByName(address[0]), port));
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }
+                break;
+              case "ws":
+                try {
+                  reader.add(new WebSocketDataReader(new URI(args[i + 2])));
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+                break;
+              case "file":
+                reader.add(new FileDataReader(args[i + 2]));
+                break;
+              default:
+                break;
+            }
+          }else{
+            System.err.println("Error: Invalid input.");
+            return reader.toArray(new DataReader[0]);
+          }
+          i += 3;
+          break;
+        default:
+          System.err.println("Error: Invalid argument.");
+          i++;
+          break;
+        } 
+      }
+      return reader.toArray(new DataReader[0]);
+    }
+    private void printHelp() {
+      System.out.println("Usage: DataStorage [options]");
+      System.out.println("Options:");
+      System.out.println("  -h\t\t\tPrint this help message");
+      System.out.println("  --input <type> <source>\tSpecify the input type and source (e.g., tcp localhost:1234) this can be repeated to get multiple files for example --input tcp localhost:1234 --input file data.txt  --input file data2.txt");
+    } 
 }
