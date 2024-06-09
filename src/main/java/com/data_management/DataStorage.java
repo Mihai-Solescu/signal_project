@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
 import com.cardiogenerator.outputs.FileOutputStrategy;
+import com.cardiogenerator.outputs.OutputStrategy;
 import java.net.InetAddress;
 import java.io.IOException;
 import java.net.URI;
@@ -114,7 +115,14 @@ public class DataStorage {
             for (Patient patient : storage.getAllPatients()) {
               alertGenerator.evaluateData(patient);
               List<PatientRecord> records = 
-                storage.getRecords(patient.getId(), 0, System.currentTimeMillis());
+                patient.getRecords(System.currentTimeMillis(), Long.MAX_VALUE);
+              for (PatientRecord record : records) {
+                int patientId = record.getPatientId();
+                long timestamp = record.getTimestamp();
+                String label = record.getRecordType();
+                String data = record.getMeasurementValue() + "";
+                output.output(patientId, timestamp, label, data);
+              }
             }
             try {
                 Thread.sleep(1);
