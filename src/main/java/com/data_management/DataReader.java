@@ -42,12 +42,19 @@ public interface DataReader {
       //parse string to data
       String[] lines = dataString.split("\n");
       lines = Arrays.copyOfRange(lines, lineNumber, lines.length);
+      if (lines.length == 0) {
+        return 0;
+      }
       if (lines.length == 1 && lines[0].equals("")) {
         return 0;
       }
       for (String line : lines) {
         String[] parts = format(line);
         if (parts.length != 4) {
+          //uncomplete last line is fine since it shows that the data hasnt been fully written
+          if(line.equals(lines[lines.length-1])) {
+            return lines.length-1;
+          }
           throw new IOException("Invalid data format to many properties");
         }
         try {

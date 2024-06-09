@@ -54,6 +54,7 @@ public class Patient {
         return;
       }
     }
+    patientRecords.add(0,record);
   }
 
   /**

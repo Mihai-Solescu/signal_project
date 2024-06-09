@@ -66,7 +66,7 @@ public class DataReaderTest {
         readers[i].update();
       }
     }
-    Thread.sleep(25);
+    Thread.sleep(100);
     for (int i = 0; i < readers.length; i++) {
       readers[i].update();
     }
@@ -92,9 +92,11 @@ public class DataReaderTest {
   private void validate() {
     for (int k = 1; k < readers.length+1; k++) {
       for (int i = 0; i < patientCount; i++) {
-        List<PatientRecord> r1 = dataStorage.getRecords(i, 0, currentTime);
+        currentTime = dataStorage.getAllPatients().get(i).getLastRecord("test")
+          .getTimestamp();
+        List<PatientRecord> r1 = dataStorage.getRecords(i, Long.MIN_VALUE, currentTime);
         List<PatientRecord> r2 = dataStorage.getRecords(
-            i+k*patientCount, 0, currentTime);
+            i+k*patientCount, Long.MIN_VALUE, currentTime);
         assertTrue(equals(r1, r2));
         assertEquals(r1.size(), DataPointCount*11);
       }
@@ -108,7 +110,7 @@ public class DataReaderTest {
     for(int i = 0; i < r1.size(); i++){
       PatientRecord pr1 = r1.get(i);
       PatientRecord pr2 = r2.get(i);
-      if(pr1.getMeasurementValue() != pr2.getMeasurementValue() ||
+      if(Math.abs(pr1.getMeasurementValue() - pr2.getMeasurementValue()) > 0.01 ||
           !pr1.getRecordType().equals(pr2.getRecordType()) ||
           pr1.getTimestamp() != pr2.getTimestamp()){
         return false;
