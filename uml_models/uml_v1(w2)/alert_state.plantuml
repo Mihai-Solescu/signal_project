@@ -1,0 +1,10 @@
+@startuml
+
+[*] -up-> Generated
+Generated -right-> Sent
+Sent -right-> Acknowledged
+Acknowledged --> Resolved : Automatically
+Acknowledged --> Resolved : Manually
+
+Resolved -left-> [*]
+@enduml

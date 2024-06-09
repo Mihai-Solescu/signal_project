@@ -2,8 +2,6 @@ package com.alerts.factory;
 
 import com.alerts.alert.Alert;
 
-public class AlertFactory {
-    public Alert createAlert(int patientId, String condition, long timestamp) {
-        return new Alert(patientId, condition, timestamp);
-    }
+public abstract class AlertFactory {
+    public abstract Alert createAlert(int patientId, String condition, long timestamp);
 }
