@@ -20,6 +20,10 @@ import java.net.URI;
 public class DataStorage {
     private static DataStorage dataStorage;
 
+    public void empty() {
+        patientMap.clear();
+    }
+
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
 
     /**

@@ -45,6 +45,7 @@ public class DataReaderTest {
     readers[0] = new FileDataReader("output/"+label+".txt");
     readers[1] = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
     readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
+    dataStorage.empty();
     try {
       Thread.sleep(100); 
     } catch (Exception e) {
@@ -105,7 +106,8 @@ public class DataReaderTest {
 
   private boolean equals(List<PatientRecord> r1, List<PatientRecord> r2){
     if(r1.size() != r2.size()){
-      return false;
+      System.out.println(r1.size() + " " + r2.size());
+      assertTrue(false);
     }
     for(int i = 0; i < r1.size(); i++){
       PatientRecord pr1 = r1.get(i);
@@ -113,7 +115,8 @@ public class DataReaderTest {
       if(Math.abs(pr1.getMeasurementValue() - pr2.getMeasurementValue()) > 0.01 ||
           !pr1.getRecordType().equals(pr2.getRecordType()) ||
           pr1.getTimestamp() != pr2.getTimestamp()){
-        return false;
+        System.out.println(pr1.getMeasurementValue() + " " + pr2.getMeasurementValue());
+        assertTrue(false);
       }
     }
     return true;
