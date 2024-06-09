@@ -1,0 +1,33 @@
+@startuml
+
+actor Nurse
+participant HeartRateMonitor as HRM
+participant AlertGenerator as AM
+participant AlertManager as AMM
+participant WebSocketDataListener as WSDL
+participant DataParser  as DP
+participant DataSourceParser as DSP
+participant DataStorage as DS
+participant IdentityManager as IM
+
+HRM -> WSDL: Data
+WSDL -> DP: Data
+activate DP
+DP -> DSP: FormattedData
+deactivate DP
+activate DSP
+DSP -> DS: storeData(PatientData)
+deactivate DSP
+DS -> AM : evaluateData(PatientData)
+activate AM
+AM -> IM : getPatientData(PatientData)
+activate IM
+IM --> AM : PatientRecord
+deactivate IM
+AM -> AMM : triggerAlert(Alert)
+deactivate AM
+AMM -> Nurse : sendAlert(Alert)
+Nurse -> AMM : acknowledgeAlert(Alert)
+
+
+@enduml
