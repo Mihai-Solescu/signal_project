@@ -120,8 +120,7 @@ public class DataStorage {
 
     private DataReader[] parseArguments(String[] args) {
       ArrayList<DataReader> reader = new ArrayList<>();
-      int count = 0;
-      for (int i = 0; i < args.length; i++) {
+      for (int i = 1; i < args.length; i++) {
        switch (args[i]) {
         case "-h":
           printHelp();
