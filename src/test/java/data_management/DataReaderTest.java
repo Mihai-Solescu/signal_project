@@ -96,6 +96,7 @@ public class DataReaderTest {
         List<PatientRecord> r2 = dataStorage.getRecords(
             i+k*patientCount, 0, currentTime);
         assertTrue(equals(r1, r2));
+        assertEquals(r1.size(), DataPointCount*11);
       }
     }
   }
