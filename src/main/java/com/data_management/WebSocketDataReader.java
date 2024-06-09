@@ -11,7 +11,7 @@ import java.io.IOException;
 public class WebSocketDataReader extends WebSocketClient implements DataReader {
   private String datacontent = "";
   private int lineNumber = 0;
-  private DataStorage dataStorage = DataStorage.getInstance();
+  private DataStorage dataStorage;
   public WebSocketDataReader(URI serverUri, Draft draft) {
     super(serverUri, draft);
     super.connect();

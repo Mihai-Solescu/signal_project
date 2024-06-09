@@ -59,8 +59,7 @@ public class TCPDataReader implements DataReader {
   public void readData(DataStorage dataStorage) throws IOException {
     lock.lock();
     try {
-      decodeData(new StringReader(datacontent), dataStorage, 0);
-      datacontent = "";
+      lineNumber = decodeData(new StringReader(datacontent), dataStorage, 0);
     } finally {
       lock.unlock();
     }

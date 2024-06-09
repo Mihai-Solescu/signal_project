@@ -45,6 +45,11 @@ public class DataReaderTest {
     readers[0] = new FileDataReader("output/"+label+".txt");
     readers[1] = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
     readers[2] = new WebSocketDataReader(new URI("ws://localhost:1235"));
+    try {
+      Thread.sleep(100); 
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
     System.out.println("TestReadData started");
     generate();
     for (int i = 0; i < readers.length; i++) {
@@ -61,7 +66,10 @@ public class DataReaderTest {
         readers[i].update();
       }
     }
-    Thread.sleep(15);
+    Thread.sleep(25);
+    for (int i = 0; i < readers.length; i++) {
+      readers[i].update();
+    }
     validate();
     System.out.println("TestReadData finished");
   }
@@ -70,7 +78,7 @@ public class DataReaderTest {
     //generate data
     for(int i = 0; i < patientCount; i++){
       for(int j = 0; j < DataPointCount; j++){
-        currentTime += 1;
+        currentTime +=1;
         String data = random.nextDouble()*100 + "";
         for (int k = 0; k < readers.length; k++) {
           outputs[k].output(i+k*patientCount, currentTime, label, data);
@@ -87,14 +95,21 @@ public class DataReaderTest {
         List<PatientRecord> r1 = dataStorage.getRecords(i, 0, currentTime);
         List<PatientRecord> r2 = dataStorage.getRecords(
             i+k*patientCount, 0, currentTime);
-        assertFalse(equals(r1, r2));
+        assertTrue(equals(r1, r2));
       }
     }
   }
 
   private boolean equals(List<PatientRecord> r1, List<PatientRecord> r2){
+    if(r1.size() != r2.size()){
+      return false;
+    }
     for(int i = 0; i < r1.size(); i++){
-      if(!r1.get(i).equals(r2.get(i))){
+      PatientRecord pr1 = r1.get(i);
+      PatientRecord pr2 = r2.get(i);
+      if(pr1.getMeasurementValue() != pr2.getMeasurementValue() ||
+          !pr1.getRecordType().equals(pr2.getRecordType()) ||
+          pr1.getTimestamp() != pr2.getTimestamp()){
         return false;
       }
     }
