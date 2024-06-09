@@ -1,0 +1,114 @@
+@startuml
+
+rectangle "Data Storage System" as DSS {
+  class "DataStorage" as DS {
+        -patientManager : IdentityManager
+        +storeData(data : PatientData) : void
+        +retrieveData(patientId : String) : PatientRecord
+        +updateData(data : PatientData) : void
+    }
+
+    class "DataRetriever" as DR {
+        - dataStorage : DataStorage
+        + retrieveData(patientId : String) : PatientData
+    }
+
+    DS --> PD
+    DR -right-> DS
+
+    class "PatientData" as PD {
+        +patientId : String
+        +metrics : String
+        +timestamp : DateTime
+    }
+}
+
+rectangle "Alert Generation System" as AGS {
+    class "AlertGenerator" as AG {
+        +evaluateData(data : PatientData)
+        +triggerAlert(alert : Alert)
+    }
+
+    AG --> A
+
+    class "Alert" as A {
+        +parentId : String
+        +condition : String
+        +timestamp : DateTime
+    }
+
+    class "AlertManager" as AM {
+        +sendAlert(alert : Alert)
+    }
+
+    AM --> A
+    AM -left-> AG
+
+    DS --> AM
+}
+
+rectangle "Data Access Layer" as DAL {
+    interface "DataListener" as DL {
+        + void onDataReceived(data : String)
+    }
+
+    DL <|.. FDL
+
+    class "FileDataListener" as FDL {
+        + void onDataReceived(data : String)
+    }
+
+    class "WebSocketDataListener" as WDL {
+        + void onDataReceived(data : String)
+    }
+
+    class "TCPDataListener" as TDL {
+        + void onDataReceived(data : String)
+    }
+
+    DL <|.. WDL
+    DL <|.. TDL
+
+    DS <-- DSP
+
+    class "DataParser" as DP {
+        + parseData(data : String) : String
+    }
+
+    class "DataSourceParser" as DSP {
+        - dataStrorage : DataStorage
+        - listener : DataListener
+        - parser : DataParser
+        + parseData(data : String) : void
+    }
+
+    DSP --> DP
+    DSP --> DL
+}
+
+rectangle "Patient Identification System" as PIS {
+    class "PatientIdentifier" as PI {
+        -patientRecord : PatientRecord
+        +matchPatientId(patientId : String) : boolean
+        +getPatientRecord(patientId : String) : PatientRecord
+    }
+
+    PI -down-> PR
+
+    class "PatientRecord" as PR {
+        +patientId : String
+        +name : String
+        +dateOfBirth : DateTime
+        +medicalHistory : String
+    }
+
+    class "IdentityManager" as IM {
+        -patients : List<PatientIdentifier>
+        +identifyPatient(patientId : String) : PatientRecord
+    }
+
+    IM <-right-> PI
+    DS -down-> IM
+}
+
+@enduml

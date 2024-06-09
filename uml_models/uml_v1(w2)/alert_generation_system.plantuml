@@ -17,6 +17,17 @@ rectangle "Alert Generation System" as AGS {
     class "AlertManager" as AM {
         +sendAlert(alert : Alert)
     }
+
+    AM --> A
+    AM -left-> AG
 }
+
+class "DataStorage" as DS {
+    +storeData(data : PatientData) : void
+    +retrieveData(patientId : String) : PatientRecord
+    +updateData(data : PatientData) : void
+}
+
+DS --> AG
 
 @enduml

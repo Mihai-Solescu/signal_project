@@ -1,0 +1,35 @@
+@startuml Patient Identification System Class Diagram
+
+rectangle "Patient Identification System" as PIS {
+  class "DataStorage" as DS {
+        -patientManager : IdentityManager
+        +storeData(data : PatientData) : void
+        +retrieveData(patientId : String) : PatientRecord
+        +updateData(data : PatientData) : void
+    }
+
+    class "PatientIdentifier" as PI {
+        -patientRecord : PatientRecord
+        +matchPatientId(patientId : String) : boolean
+        +getPatientRecord(patientId : String) : PatientRecord
+    }
+
+    PI -down-> PR
+
+    class "PatientRecord" as PR {
+        +patientId : String
+        +name : String
+        +dateOfBirth : DateTime
+        +medicalHistory : String
+    }
+
+    class "IdentityManager" as IM {
+        -patients : List<PatientIdentifier>
+        +identifyPatient(patientId : String) : PatientRecord
+    }
+
+    IM <-right-> PI
+    DS -up-> IM
+}
+
+@enduml

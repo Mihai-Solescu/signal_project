@@ -2,25 +2,23 @@
 
 rectangle "Data Storage System" as DSS {
     class "DataStorage" as DS {
-        +storeData(data : PatientData)
+        +storeData(data : PatientData) : void
         +retrieveData(patientId : String) : PatientData
-        +storeData(patientId : String) 
+        +storeData(patientId : String) : void
     }
 
     class "DataRetriever" as DR {
-        +retrieveData(patientId : String) : PatientData
+        - dataStorage : DataStorage
+        + retrieveData(patientId : String) : PatientData
     }
 
     DS --> PD
+    DR -right-> DS
 
     class "PatientData" as PD {
         +patientId : String
         +metrics : String
         +timestamp : DateTime
-    }
-
-    interface "IDataRetrieval" as IDR {
-        +retrieveData(patientId : String) : PatientData
     }
 }
 

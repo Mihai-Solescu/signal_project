@@ -1,0 +1,55 @@
+@startuml Data Access Layer Class Diagram
+
+rectangle "Data Access Layer" as DAL {
+    interface "DataListener" as DL {
+        + void onDataReceived(data : String)
+    }
+
+    DL <|.. FDL
+
+    class "FileDataListener" as FDL {
+        + void onDataReceived(data : String)
+    }
+
+    class "WebSocketDataListener" as WDL {
+        + void onDataReceived(data : String)
+    }
+
+    class "TCPDataListener" as TDL {
+        + void onDataReceived(data : String)
+    }
+
+    DL <|.. WDL
+    DL <|.. TDL
+
+    DS <-right- DSP
+    DS <-left- PD
+
+    class "DataParser" as DP {
+        + parseData(data : String) : String
+    }
+
+    class "DataSourceParser" as DSP {
+        - dataStrorage : DataStorage
+        - listener : DataListener
+        - parser : DataParser
+        + parseData(data : String) : void
+    }
+
+    DSP --> DP
+    DSP --> DL
+
+    class "DataStorage" as DS {
+        + storeData(data : PatientData) : void
+        + retrieveData(patientId : String) : PatientData
+        + deleteData(patientId : String) : void
+    }
+
+    class "PatientData" as PD {
+        + patientId : String
+        + metrics : String
+        + timestamp : String
+    }
+}   
+
+@enduml

@@ -10,4 +10,5 @@ public class AlertConstants {
   public static final double SATURATION_DROP_THRESHOLD = 5.0;
   public static final int ECG_MOVING_AVERAGE_WINDOW = 100;
   public static final int ECG_PEAK_THRESHOLD = 70;
+  public static final int HIGH_HEART_RATE_THRESHOLD = 130;
 }
