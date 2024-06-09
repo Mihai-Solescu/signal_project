@@ -78,7 +78,7 @@ public class DataReaderTest {
     //generate data
     for(int i = 0; i < patientCount; i++){
       for(int j = 0; j < DataPointCount; j++){
-        currentTime +=1;
+        currentTime = random.nextLong();
         String data = random.nextDouble()*100 + "";
         for (int k = 0; k < readers.length; k++) {
           outputs[k].output(i+k*patientCount, currentTime, label, data);

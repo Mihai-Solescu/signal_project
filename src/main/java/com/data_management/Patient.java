@@ -68,8 +68,16 @@ public class Patient {
    *         range
    */
   public List<PatientRecord> getRecords(long startTime, long endTime) {
+    if (startTime > endTime) {
+      return new ArrayList<>();
+    }
+    if (patientRecords.size() == 0) {
+      return new ArrayList<>();
+    }
     //binary search for timestamp start time
     int current = (patientRecords.size() / 2)-1;
+    int upper = patientRecords.size();
+    int lower = 0;
     while(true) {
       if(startTime < patientRecords.get(0).getTimestamp()) {
         current = 0;
@@ -81,9 +89,11 @@ public class Patient {
       PatientRecord left = patientRecords.get(current);
       PatientRecord right = patientRecords.get(current + 1);
       if (left.getTimestamp() > startTime) {
-        current /= 2;
+        upper = current;
+        current -= (current - lower)/2;
       } else if (right.getTimestamp() < startTime) {
-        current += (patientRecords.size() - current) / 2;
+        lower = current;
+        current += (upper - current) / 2;
       } else if (right.getTimestamp() == startTime) {
         if(left.getTimestamp() != startTime) {
           current++;
