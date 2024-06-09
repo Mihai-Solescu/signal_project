@@ -93,7 +93,7 @@ public class DataStorage {
     public static void main(String[] args) {
         // DataReader is not defined in this scope, should be initialized appropriately.
         // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage
