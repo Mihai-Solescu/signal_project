@@ -2,7 +2,6 @@ package com.data_management;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +11,7 @@ class PatientTest {
   @Test
   void getRecords() {
     Patient patient = new Patient(1);
+    assertTrue(patient.getRecords(0, 10000000000L).isEmpty());
     patient.addRecord(120, "SystolicPressure", 1000);
     patient.addRecord(130, "SystolicPressure", 2000);
     patient.addRecord(120, "SystolicPressure", 3000);
@@ -19,6 +19,8 @@ class PatientTest {
 
     List<PatientRecord> recs = patient.getRecords(2000, 3000);
     assertEquals(2, recs.size());
+    List<PatientRecord> recs2 = patient.getRecords(3000, 3001);
+    assertEquals(2, recs2.size());
 
     assertEquals(130, recs.get(0).getMeasurementValue());
     assertEquals(120, recs.get(1).getMeasurementValue());

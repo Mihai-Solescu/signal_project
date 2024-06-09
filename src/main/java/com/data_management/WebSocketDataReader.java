@@ -12,10 +12,6 @@ public class WebSocketDataReader extends WebSocketClient implements DataReader {
   private String datacontent = "";
   private int lineNumber = 0;
   private DataStorage dataStorage;
-  public WebSocketDataReader(URI serverUri, Draft draft) {
-    super(serverUri, draft);
-    super.connect();
-  }
 
   public WebSocketDataReader(URI serverUri) {
     super(serverUri);

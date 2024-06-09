@@ -192,25 +192,4 @@ public class Patient {
     return patientId;
   }
 
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (obj == this) {
-      return true;
-    }
-    if (obj.getClass() != this.getClass()) {
-      return false;
-    }
-    Patient other = (Patient) obj;
-    if (other.getPatientId() != this.getPatientId()) {
-      return false;
-    }
-    for (int i = 0; i < patientRecords.size(); i++) {
-      if (!patientRecords.get(i).equals(other.patientRecords.get(i))) {
-        return false;
-      }
-    }
-    return true;
-  }
 }
