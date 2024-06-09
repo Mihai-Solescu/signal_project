@@ -96,32 +96,46 @@ public class DataStorage {
      */
     public static void main(String[] args) throws Exception{
         // DataReader is not defined in this scope, should be initialized appropriately.
-        DataReader reader = new TCPDataReader(InetAddress.getByName("localhost"), 1234);
         DataStorage storage = DataStorage.getInstance();
-        reader.readData(storage);
-
-        // Example of using DataStorage to retrieve and print records for a patient
-        List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
-        for (PatientRecord record : records) {
-            System.out.println("Record for Patient ID: " + record.getPatientId() +
-                    ", Type: " + record.getRecordType() +
-                    ", Data: " + record.getMeasurementValue() +
-                    ", Timestamp: " + record.getTimestamp());
+        DataReader[] readers = parseArguments(args);
+        for (DataReader reader : readers) {
+          reader.readData(storage);
         }
 
         // Initialize the AlertGenerator with the storage
         AlertGenerator alertGenerator = new AlertGenerator(storage);
 
-        // Evaluate all patients' data to check for conditions that may trigger alerts
-        for (Patient patient : storage.getAllPatients()) {
-            alertGenerator.evaluateData(patient);
+        while (true) {
+            for (DataReader reader : readers) {
+              reader.update();
+            }
+            try {
+                Thread.sleep(1000);
+                // Evaluate all patients' data to check for conditions that may trigger alerts
+                for (Patient patient : storage.getAllPatients()) {
+                  alertGenerator.evaluateData(patient);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+        // Example of using DataStorage to retrieve and print records for a patient
+        List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
+        for (PatientRecord record : records) {
+            System.out.println(
+                "Record for Patient ID: " + record.getPatientId() +
+                    ", Type: " + record.getRecordType() +
+                    ", Data: " + record.getMeasurementValue() +
+                    ", Timestamp: " + record.getTimestamp());
+        }
+
+
     }
 
-    private DataReader[] parseArguments(String[] args) {
+    private static DataReader[] parseArguments(String[] args) {
       ArrayList<DataReader> reader = new ArrayList<>();
-      int count = 0;
-      for (int i = 0; i < args.length; i++) {
+      for (int i = 1; i < args.length; i++) {
        switch (args[i]) {
         case "-h":
           printHelp();
@@ -166,7 +180,7 @@ public class DataStorage {
       }
       return reader.toArray(new DataReader[0]);
     }
-    private void printHelp() {
+    private static void printHelp() {
       System.out.println("Usage: DataStorage [options]");
       System.out.println("Options:");
       System.out.println("  -h\t\t\tPrint this help message");
