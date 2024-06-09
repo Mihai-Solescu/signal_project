@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
-import com.cardiogenerator.outputs.TcpOutputStrategy;
+import com.cardiogenerator.outputs.FileOutputStrategy;
 import java.net.InetAddress;
 import java.io.IOException;
 import java.net.URI;
@@ -97,6 +97,7 @@ public class DataStorage {
     public static void main(String[] args) throws Exception{
         // DataReader is not defined in this scope, should be initialized appropriately.
         DataStorage storage = DataStorage.getInstance();
+        OutputStrategy output = new FileOutputStrategy("log/");
         DataReader[] readers = parseArguments(args);
         for (DataReader reader : readers) {
           reader.readData(storage);
@@ -109,26 +110,19 @@ public class DataStorage {
             for (DataReader reader : readers) {
               reader.update();
             }
+            // Evaluate all patients' data to check for conditions that may trigger alerts
+            for (Patient patient : storage.getAllPatients()) {
+              alertGenerator.evaluateData(patient);
+              List<PatientRecord> records = 
+                storage.getRecords(patient.getId(), 0, System.currentTimeMillis());
+            }
             try {
-                Thread.sleep(1000);
-                // Evaluate all patients' data to check for conditions that may trigger alerts
-                for (Patient patient : storage.getAllPatients()) {
-                  alertGenerator.evaluateData(patient);
-                }
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        // Example of using DataStorage to retrieve and print records for a patient
-        List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
-        for (PatientRecord record : records) {
-            System.out.println(
-                "Record for Patient ID: " + record.getPatientId() +
-                    ", Type: " + record.getRecordType() +
-                    ", Data: " + record.getMeasurementValue() +
-                    ", Timestamp: " + record.getTimestamp());
-        }
 
 
     }
