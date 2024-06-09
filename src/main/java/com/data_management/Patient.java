@@ -90,10 +90,10 @@ public class Patient {
       PatientRecord right = patientRecords.get(current + 1);
       if (left.getTimestamp() > startTime) {
         upper = current;
-        current -= (current - lower)/2;
+        current -= (current - lower + 1)/2;
       } else if (right.getTimestamp() < startTime) {
         lower = current;
-        current += (upper - current) / 2;
+        current += (upper - current + 1) / 2;
       } else if (right.getTimestamp() == startTime) {
         if(left.getTimestamp() != startTime) {
           current++;
